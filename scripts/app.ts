@@ -112,6 +112,9 @@ class RTC {
     }
 
     private addMessage(type: MessageType, text: string): void {
+        if (text.replace(/\s/g, '') === '')
+            return;
+
         const message_div = document.createElement('div');
         message_div.classList.add('message', type);
 
@@ -175,7 +178,6 @@ class RTC {
 
         // Share with other client
         // console.log(offer);
-        this.addMessage(MessageType.SYSTEM, JSON.stringify(offer));
         this.ws.send(JSON.stringify({ offer: offer }));
     }
 }
