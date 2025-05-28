@@ -2,6 +2,9 @@
 
 Dieses Projekt ist eine einfache WebRTC-Demo mit integriertem Chat. Die initiale Signalisierung erfolgt über eine WebSocket-Verbindung, anschließend wird eine direkte RTC-Verbindung zwischen den Clients aufgebaut.
 
+Die Implementierung orientiert sich an der offiziellen Anleitung unter:  
+👉 [https://webrtc.org/getting-started/peer-connections?hl=de](https://webrtc.org/getting-started/peer-connections?hl=de)
+
 ## Voraussetzungen
 
 - Node.js ist installiert
