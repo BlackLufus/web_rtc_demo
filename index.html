@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebRTC Demo</title>
+  <style>
+    :root {
+      --preferred-color: #2196F3;
+    
+      --primary-color: #fff;
+      --secondary-color: #ddd;
+      --third-color: #bbb;
+
+      --primary-background-color: #242424;
+      --secondary-background-color: #333;
+      --third-background-color: #666;
+      --fourth-background-color: #ddd;
+    }
+    * {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      justify-content: center;
+      background-color: var(--primary-background-color);
+    }
+    main {
+      display: block;
+      margin: auto;
+      padding: 20px 40px 40px 40px;
+      border-radius: 20px;
+      border: 4px solid #666;
+      background-color: black;
+    }
+    h1 {
+      color: #1976D2;
+      text-align: center;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+    }
+    button {
+      cursor: pointer;
+      width: 240px;
+      height: 50px;
+      font-size: 24px;
+      border-radius: 10px;
+      border: 2px solid #bbb;
+      font-weight: 500;
+      color: var(--secondary-color);
+      background-color: var(--primary-background-color);
+    }
+    button:active:hover {
+      color: var(--primary-color);
+      background-color: var(--third-background-color);
+    }
+    button:hover:not(:active) {
+      color: var(--primary-color);
+      background-color: var(--secondary-background-color);
+    }
+    .wrapper {
+      border-radius: 10px;
+      overflow: hidden;
+      width: 550px;
+      max-width: 550px;
+      margin-bottom: 10px;
+      border: 2px solid #bbb;
+    }
+    .messages {
+      display: flex;
+      flex-direction: column;
+      max-width: 550px;
+      height: 600px;
+      max-height: 600px;
+      padding-top: 5px;
+      padding-inline: 5px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      background-color: var(--primary-background-color);
+    }
+    .message {
+      display: block;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      background-color: var(--secondary-background-color);
+    }
+    .message:hover {
+      color: var(--primary-color);
+      background-color: var(--third-background-color);
+    }
+    .system {
+      align-self: center;
+      margin-inline: 25px;
+      color: red;
+    }
+    .sender {
+      align-self: flex-end;
+      margin-left: 75px;
+      border-radius: 5px 20px 5px 20px;
+      color: var(--preferred-color);
+    }
+    .receiver {
+      align-self: flex-start;
+      margin-right: 75px;
+      border-radius: 20px 5px 20px 5px;
+      color: var(--secondary-color);
+    }
+    .text {
+      margin: 14px 20px 0px 20px;
+    }
+    .text > span {
+      text-align: center;
+      font-size: 18px;
+      font-weight:400;
+      word-break: break-word;
+    }
+    .time_stamp {
+      display: flex;
+      justify-content: end;
+      margin: 0 10px 4px 0;
+    }
+    .time_stamp > span {
+      font-size: 12px;
+      color: var(--third-color);
+    }
+    .input_section {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    input {
+      outline: none;
+      box-shadow: none;
+      border: none;
+      padding: 0 5px;
+      margin: 0;
+      font-size: 24px;
+      border-radius: 10px;
+      border: 2px solid #bbb;
+      width: 100%;
+      margin-right: 10px;
+      color: var(--secondary-color);
+      background-color: var(--primary-background-color);
+    }
+    input:active:hover {
+      color: var(--primary-color);
+      background-color: var(--third-background-color);
+    }
+    input:hover:not(:active) {
+      color: var(--primary-color);
+      background-color: var(--secondary-background-color);
+    }
+    input[type=search]::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      height: 24px;
+      width: 24px;
+      background: url('data:image/svg+xml;utf8,<svg fill="gray" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="white"/><path stroke="gray" stroke-width="2" d="M6 6l8 8M14 6l-8 8"/></svg>') no-repeat center center;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    input[type=search]::-webkit-search-cancel-button:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>WebRTC Peer-to-Peer Demo</h1>
+    </header>
+    <div class="options">
+      <button id="startButton">Start</button>
+    </div>
+    <br>
+    <div id="wrapper" class="wrapper">
+      <div id="messages" class="messages">
+        <!-- <div class="message system">
+          <div class="text">
+            <span>System Message.</span>
+          </div>
+          <div class="time_stamp">
+            <span>20:36</span>
+          </div>
+        </div>
+        <div class="message system">
+          <div class="text">
+            <span>System Message.</span>
+          </div>
+          <div class="time_stamp">
+            <span>20:36</span>
+          </div>
+        </div>
+        <div class="message sender">
+          <div class="text">
+            <span>Hallo</span>
+          </div>
+          <div class="time_stamp">
+            <span>20:36</span>
+          </div>
+        </div>
+        <div class="message sender">
+          <div class="text">
+            <span>Wie geht es dir?</span>
+          </div>
+          <div class="time_stamp">
+            <span>20:36</span>
+          </div>
+        </div>
+        <div class="message receiver">
+          <div class="text">
+            <span>Hallo</span>
+          </div>
+          <div class="time_stamp">
+            <span>20:36</span>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div class="input_section">
+      <input type="search" name="text" id="messageInput">
+      <button id="sendButton">Send</button>
+    </div>
+    <script src="scripts/js/app.js"></script>
+  </main>
+</body>
+</html>
